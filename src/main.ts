@@ -14,6 +14,7 @@ let pos2: Map<Player, Vec3> = new Map<Player, Vec3>()
 command.register("jsonworld", "Convert World To JsonWorld").overload((param, origin) => {
     const player = origin.getEntity() as Player
     if (!(player instanceof Player)) return false
+    if (!fs.existsSync(path.join(__dirname, "../world"))) return fs.mkdirSync(path.join(__dirname, "../world"))
     let save_air2: boolean = param.save_air as boolean
     if(param.save_air == null) save_air2 = false 
     if (param.mode === "pos1") {
