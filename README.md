@@ -20,3 +20,9 @@ How To Use:
 support:
 
 -Block & Data
+
+If you want to update anything, tell me.
+
+I'm not good at thinking
+
+And I don't have much free time either.
