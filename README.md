@@ -1,6 +1,6 @@
 # bdsx-json_world
 
-How To Use:
+How To Use:\n
   Commands:
     pos1: Save position1
     pos2: Save position2
