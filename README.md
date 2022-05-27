@@ -16,3 +16,7 @@ How To Use:
 
   
 -json_world File: plugins/bdsx-json_world/world
+
+support:
+
+-Block & Data
