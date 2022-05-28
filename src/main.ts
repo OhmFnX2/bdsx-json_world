@@ -6,6 +6,7 @@ import { command } from "bdsx/command"
 import { bool_t, CxxString } from "bdsx/nativetype"
 import * as fs from "fs"
 import * as path from "path"
+import { Path } from "typescript"
 
 let pos1: Map<Player, Vec3> = new Map<Player, Vec3>()
 
@@ -61,55 +62,48 @@ command.register("jsonworld", "Convert World To JsonWorld").overload((param, ori
             zMin = Math.floor(pos2p.z)
             zMax = Math.floor(pos1p.z)
         }
-        let worldfile = {
-            json_world: [
-                {
-                    block_id: "minecraft:ohmfn_X2",
-                    block_data: 0,
-                    position: {
-                        x: 0,
-                        y: 500,
-                        z: 0
-                    }
-                }
-            ]
-        }
         let ph = path.join(__dirname, `../world/${param.filename}.json`)
+        fs.writeFileSync(ph, "")
+        fs.appendFileSync(ph, `{"json_world":[`)
         for (let x: number = xMin; x <= xMax; x++) {
             for (let y: number = yMin; y <= yMax; y++) {
                 for (let z: number = zMin; z <= zMax; z++) {
                     let block = player.getDimension().blockSource.getBlock(BlockPos.create(x, y, z))
                     let blockId = block.getDescriptionId().replace("tile.", "minecraft:")
                     if (blockId === "minecraft:air" && save_air2 === false) continue
-                    worldfile['json_world'].push({
-                        block_id: blockId,
-                        block_data: block.data,
-                        position: {
-                            x: x,
-                            y: y,
-                            z: z
-                        }
-                    })
+                    console.log("Saveing block: " + blockId + " at " + x + " " + y + " " + z)
+                    fs.appendFileSync(ph, `{"block_id":"${blockId}","block_data":${block.data},"position":{"x":${x},"y":${y},"z":${z}}},`)
                     sendMessage(player, `Saving block ${blockId} at ${x} ${y} ${z}`)
                 }
             }
         }
         sendMessage(player, `Saving world to ${ph}`)
-        fs.writeFileSync(ph, JSON.stringify(worldfile));
+        fs.appendFileSync(ph, `{"block_id":"OhmFn X2","block_data":69,"position":{"x":0,"y":500,"z":0}}]}`)
         return true
     }
     if (param.mode === "load") {
+        sendMessage(player, "Loading...")
         let ph = path.join(__dirname, `../world/${param.filename}.json`)
         if (!fs.existsSync(ph)) return sendMessage(player, "File not found")
-        let worldfile = JSON.parse(fs.readFileSync(ph).toString())
-        for (let block of worldfile.json_world) {
-            let blockPos = BlockPos.create(block.position.x, block.position.y, block.position.z)
-            let blockId = block.block_id
-            let blockData = block.block_data
-            if (blockId === "minecraft:air" && save_air2 === false) continue
-            if (blockPos.y >= 500) continue
-            player.getDimension().blockSource.setBlock(blockPos, Block.create(blockId, blockData) as Block)
-            sendMessage(player, `Loading block ${blockId} at ${blockPos.x} ${blockPos.y} ${blockPos.z}`)
+        let wI:number = 0
+        let wRun: boolean = true
+        while (wRun == true) {
+            callbackFun(() => {
+                let worldfile = JSON.parse(fs.readFileSync(ph).toString()).json_world[wI]
+                if (worldfile == null) {
+                    wRun = false
+                    return
+                }
+                let blockPos = BlockPos.create(worldfile.position.x, worldfile.position.y, worldfile.position.z)
+                let blockId = worldfile.block_id
+                let blockData = worldfile.block_data
+                if (blockId === "minecraft:air" && save_air2 === false) return
+                if (blockPos.y >= 500) return
+                console.log(`Loading block ${blockId} at ${blockPos.x} ${blockPos.y} ${blockPos.z}`)
+                sendMessage(player, `Loading block ${blockId} at ${blockPos.x} ${blockPos.y} ${blockPos.z}`)
+                player.getDimension().blockSource.setBlock(blockPos, Block.create(blockId, blockData) as Block)
+            })
+            wI++
         }
         sendMessage(player, "World loaded")
         return true //code by github copilot & Edit by OhmFn X2
@@ -136,4 +130,8 @@ function sendMessage(player: Player, message: string, type: TextPacket.Types = 1
     pk.message = message
     player.sendPacket(pk)
     pk.dispose()
+}
+
+function callbackFun(_callback: Function) {
+    _callback()
 }
