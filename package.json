@@ -1,6 +1,6 @@
 {
     "name": "@bdsx/json_world",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "description": "Convert JSON to World",
     "main": "index.js",
     "keywords": [],
