@@ -1,0 +1,6 @@
+/.git
+*.ts
+!*.d.ts
+!*.js
+/world
+/node_modules
