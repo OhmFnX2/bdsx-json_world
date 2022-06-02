@@ -1,5 +1,11 @@
 # bdsx-json_world
 
+json_world is Convert World to JsonWorld
+
+JsonWorld to Minecraft Bedrock LevelDb or Nukkit LevelDb
+
+Is now support: Bdsx & Nukkit
+
 Nukkit Json World: https://github.com/OhmFnX2/nukkit-jsonworld
 
 How To Use:
