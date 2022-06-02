@@ -6,13 +6,9 @@ How To Use:
 
 -Commands:
 
--- /jsonworld pos1 : Save position1
+-- /jsonworld save <pos1> <pos2> <filename> [save_air] : Save json_world
 
--- /jsonworld pos2 : Save position2
-
--- /jsonworld save [filename] [save_air] : Save json_world
-
--- /jsonworld load [filename] [load_air] : Load json_world
+-- /jsonworld load <filename]> [load_air] : Load json_world
 
 -- /jsonworld list : List json_world
   
